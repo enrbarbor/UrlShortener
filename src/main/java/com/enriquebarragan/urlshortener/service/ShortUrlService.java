@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class ShortUrlService {
         ShortUrl shortUrl = ShortUrl.builder()
                 .originalUrl(request.getOriginalUrl())
                 .shortCode("temp")
+                .expiresAt(request.getExpiresAt())
                 .build();
 
         ShortUrl saved = shortUrlRepository.save(shortUrl);
@@ -38,6 +40,11 @@ public class ShortUrlService {
     public String getOriginalUrl(String shortCode) {
         ShortUrl shortUrl = shortUrlRepository.findByShortCode(shortCode)
                 .orElseThrow(() -> new RuntimeException("Code not found: " + shortCode));
+
+        if (shortUrl.getExpiresAt() != null &&
+                shortUrl.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("This link has expired");
+        }
 
         shortUrl.setClickCount(shortUrl.getClickCount() + 1);
         shortUrlRepository.save(shortUrl);
