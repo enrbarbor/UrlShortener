@@ -94,6 +94,13 @@
             <version>3.0.3</version>
         </dependency>
 
+        <!-- Rate Limiting -->
+        <dependency>
+            <groupId>com.github.vladimir-bukhtoyarov</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>8.0.1</version>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
